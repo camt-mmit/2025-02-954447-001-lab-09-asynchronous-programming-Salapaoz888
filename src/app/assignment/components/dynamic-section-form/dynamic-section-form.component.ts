@@ -1,6 +1,5 @@
 import { Component, input, signal, effect } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-// แก้ไข Path ตรงนี้ให้ถูกต้องสำหรับ Experimental Forms
 import { form,FormField } from '@angular/forms/signals';
 import { DynamicSection } from '../../types';
 
