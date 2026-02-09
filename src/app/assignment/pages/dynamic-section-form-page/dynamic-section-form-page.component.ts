@@ -7,13 +7,13 @@ import { DynamicSectionFormComponent } from '../../components/dynamic-section-fo
   standalone: true,
   imports: [DynamicSectionFormComponent],
   template: `
-    <h3>Form Page (Auto-Save)</h3>
+    <h3>Form Page </h3>
 
     <app-dynamic-section-form
       [data]="dataResource.value() ?? []"
     />
 
-    <p style="color: green; font-size: 0.8em;">Changes are saved automatically.</p>
+    
   `
 })
 export class DynamicSectionFormPageComponent {

@@ -1,12 +1,13 @@
 import { Component, input, signal, effect } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
+// แก้ไข Path ตรงนี้ให้ถูกต้องสำหรับ Experimental Forms
+import { form,FormField } from '@angular/forms/signals';
 import { DynamicSection } from '../../types';
 
 @Component({
   selector: 'app-dynamic-section-form',
   standalone: true,
-  imports: [FormsModule, DecimalPipe],
+  imports: [FormField, DecimalPipe],
   template: `
     <button (click)="addSection()">+ Section</button>
 
@@ -27,12 +28,14 @@ import { DynamicSection } from '../../types';
 
         @for (num of section; track j; let j = $index) {
           <div class="input-row">
-            Number {{ j + 1 }}
-            <input
-              type="number"
-              [ngModel]="num"
-              (ngModelChange)="updateNumber(i, j, $event)"
-            />
+            <label>Number {{ j + 1 }}</label>
+
+            @if (getControl(i, j); as control) {
+               <input
+                type="number"
+                [formField]="control"
+              />
+            }
 
             <button
               (click)="removeNumber(i, j)"
@@ -55,10 +58,7 @@ import { DynamicSection } from '../../types';
     .section-header { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
     .input-row { margin-bottom: 5px; }
     .btn-danger { background-color: red; color: white; }
-
-    /* สไตล์สำหรับปุ่มที่ถูก Disable */
     button:disabled { background-color: #ccc; cursor: not-allowed; color: #666; border-color: #999; }
-
     .result-row { margin-top: 10px; border-top: 1px solid #ccc; padding-top: 5px; }
   `]
 })
@@ -66,21 +66,26 @@ export class DynamicSectionFormComponent {
   readonly data = input<DynamicSection>([]);
   readonly model = signal<number[][]>([]);
 
+  // สร้าง Form Tree เชื่อมกับ Signal
+  protected readonly sectionForm = form(this.model);
+
   constructor() {
     effect(() => {
       const initData = this.data();
-      // ถ้าไม่มีข้อมูล ให้เริ่มด้วย [[0]] (1 Section, 1 Number)
       if (!initData || initData.length === 0) {
         this.model.set([[0]]);
       } else {
-        // Map ข้อมูล โดยถ้า Section ไหนว่างเปล่า ให้เติม [0] เข้าไป
         this.model.set(initData.map(sec => sec.length > 0 ? [...sec] : [0]));
       }
     });
   }
 
+  // Helper function เพื่อเข้าถึง Control ใน Array ซ้อน Array
+  getControl(i: number, j: number): any {
+    return (this.sectionForm as any)?.[i]?.[j];
+  }
+
   addSection() {
-    // จุดที่แก้: เพิ่ม Section ใหม่พร้อมตัวเลขเริ่มต้น 1 ตัว [0]
     this.model.update(sections => [...sections, [0]]);
   }
 
@@ -101,23 +106,9 @@ export class DynamicSectionFormComponent {
     this.model.update(sections =>
       sections.map((sec, i) => {
         if (i !== sectionIndex) return sec;
-
-        // จุดที่แก้: ห้ามลบถ้าเหลือตัวเลขเดียว
         if (sec.length <= 1) return sec;
-
         return sec.filter((_, j) => j !== numberIndex);
       })
-    );
-  }
-
-  updateNumber(sectionIndex: number, numberIndex: number, value: '') {
-    const numericValue = value === '' || value === null ? 0 : Number(value);
-    this.model.update(sections =>
-      sections.map((sec, i) =>
-        i === sectionIndex
-          ? sec.map((n, j) => j === numberIndex ? numericValue : n)
-          : sec
-      )
     );
   }
 
