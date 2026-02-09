@@ -7,59 +7,8 @@ import { DynamicSection } from '../../types';
   selector: 'app-dynamic-section-form',
   standalone: true,
   imports: [FormField, DecimalPipe],
-  template: `
-    <button (click)="addSection()">+ Section</button>
-
-    @for (section of model(); track i; let i = $index) {
-      <div class="section-box">
-        <div class="section-header">
-          <button (click)="addNumber(i)">+ Number</button>
-          <span>Section {{ i + 1 }}</span>
-
-          <button
-            (click)="removeSection(i)"
-            class="btn-danger"
-            [disabled]="model().length <= 1"
-          >
-            Delete Section
-          </button>
-        </div>
-
-        @for (num of section; track j; let j = $index) {
-          <div class="input-row">
-            <label>Number {{ j + 1 }}</label>
-
-            @if (getControl(i, j); as control) {
-               <input
-                type="number"
-                [formField]="control"
-              />
-            }
-
-            <button
-              (click)="removeNumber(i, j)"
-              [disabled]="section.length <= 1"
-            >
-              x
-            </button>
-          </div>
-        }
-
-        <div class="result-row">
-          Result
-          <strong>{{ sum(section) | number }}</strong>
-        </div>
-      </div>
-    }
-  `,
-  styles: [`
-    .section-box { border: 1px solid #999; padding: 10px; margin: 10px 0; }
-    .section-header { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
-    .input-row { margin-bottom: 5px; }
-    .btn-danger { background-color: red; color: white; }
-    button:disabled { background-color: #ccc; cursor: not-allowed; color: #666; border-color: #999; }
-    .result-row { margin-top: 10px; border-top: 1px solid #ccc; padding-top: 5px; }
-  `]
+  templateUrl: './dynamic-section-form.html',
+  styleUrl: './dynamic-section-form.scss'
 })
 export class DynamicSectionFormComponent {
   readonly data = input<DynamicSection>([]);

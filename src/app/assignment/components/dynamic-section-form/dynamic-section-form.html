@@ -1,0 +1,43 @@
+<button (click)="addSection()">+ Section</button>
+
+@for (section of model(); track i; let i = $index) {
+  <div class="section-box">
+    <div class="section-header">
+      <button (click)="addNumber(i)">+ Number</button>
+      <span>Section {{ i + 1 }}</span>
+
+      <button
+        (click)="removeSection(i)"
+        class="btn-danger"
+        [disabled]="model().length <= 1"
+      >
+        Delete Section
+      </button>
+    </div>
+
+    @for (num of section; track j; let j = $index) {
+      <div class="input-row">
+        <label>Number {{ j + 1 }}</label>
+
+        @if (getControl(i, j); as control) {
+           <input
+            type="number"
+            [formField]="control"
+          />
+        }
+
+        <button
+          (click)="removeNumber(i, j)"
+          [disabled]="section.length <= 1"
+        >
+          x
+        </button>
+      </div>
+    }
+
+    <div class="result-row">
+      Result
+      <strong>{{ sum(section) | number }}</strong>
+    </div>
+  </div>
+}

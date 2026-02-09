@@ -1,0 +1,35 @@
+.section-box {
+  border: 1px solid #999;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.section-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.input-row {
+  margin-bottom: 5px;
+}
+
+.btn-danger {
+  background-color: red;
+  color: white;
+}
+
+/* สไตล์สำหรับปุ่มที่ถูก Disable */
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  color: #666;
+  border-color: #999;
+}
+
+.result-row {
+  margin-top: 10px;
+  border-top: 1px solid #ccc;
+  padding-top: 5px;
+}
