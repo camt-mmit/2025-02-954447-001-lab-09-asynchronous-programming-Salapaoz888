@@ -65,7 +65,7 @@ export class DynamicSectionFormComponent {
   readonly data = input<DynamicSection>([]);
   readonly model = signal<number[][]>([]);
 
-  // สร้าง Form Tree เชื่อมกับ Signal
+
   protected readonly sectionForm = form(this.model);
 
   constructor() {
@@ -79,7 +79,7 @@ export class DynamicSectionFormComponent {
     });
   }
 
-  // Helper function เพื่อเข้าถึง Control ใน Array ซ้อน Array
+
   getControl(i: number, j: number): any {
     return (this.sectionForm as any)?.[i]?.[j];
   }
